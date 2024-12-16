@@ -4,26 +4,27 @@ HOST = ""  # todo: specify the correct hostname of IP address to communicate wit
 PORT = 20010 # todo: specify the correct port number to communicate with the server.
 CLIENT_PORTS = [20001, 20002, 20003]
 
-def send_message(msg, port):
-    data = ""
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        s.connect((HOST, port))
-        byte_msg = msg.encode('utf-8')
-        s.sendall(byte_msg)
-        data += s.recv(1024)
-    
-    return data
+import socket
 
-def check_load(port):
-    msg = 'check_load'
-    data = ""
+
+def send_message(msg, port, res = False):
+    data = b""
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        s.connect((HOST, port))
         byte_msg = msg.encode('utf-8')
-        s.sendall(byte_msg)
-        data += s.recv(1024)
-    load, cache = data.split(" ")
-    return load, cache
+        s.sendto(byte_msg, (HOST, port))
+        if res:
+            data, _ = s.recvfrom(1024)
+    
+    return data.decode('utf-8')
+
+
+def check_load(message, port):
+    msg = 'check_load' + ' ' + message
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.sendto(msg.encode('utf-8'), (HOST, port))
+        data, _ = s.recvfrom(1024)
+    load, cache = data.decode('utf-8').split(" ")
+    return int(load), cache
 
 def main():
     # open a UDP socket
@@ -32,20 +33,23 @@ def main():
         print('Load Balancer Server listening on {}:{}'.format(HOST, PORT))
         while True:
             data, addr = s.recvfrom(1024)
+            message = data.decode()
             if not data:
                 break
             least_load = 999
             best_port = CLIENT_PORTS[0]
             for port in CLIENT_PORTS:
-                load, cache = check_load(port)
+                load, cache = check_load(message, port)
                 if load < least_load:
                     least_load = load 
                     best_port = port
-                if cache:
+                if cache == "yes":
                     best_port = port
                     break
 
-            send_message(data, best_port)
+            msg = send_message(message, best_port, True)
+            print(f"Load Balancer recieved: {msg}")
+            send_message(msg, addr[1])
 
 
 

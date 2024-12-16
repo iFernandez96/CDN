@@ -1,10 +1,7 @@
 import socket
 
 HOST = ""  # todo: specify the server's hostname or IP address inside the quotes
-PORT1 = 20001 
-PORT2 = 20002 
-PORT3 = 20003 
-
+PORT = 20010
 def main():
     msg = ""
     while msg != "done":

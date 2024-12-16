@@ -12,3 +12,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         if not data:
             break
         s.sendto(data.upper(), addr)
+        print(f"Server sent {data.upper().decode()} to {addr}")
