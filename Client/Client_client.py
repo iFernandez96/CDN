@@ -29,9 +29,9 @@ def main():
         print()
         print("please press enter to clear the screen for the next query...")
         user_input = input('')
-        if user_input == "":
-            os.system("clear")
-
+        while (user_input != ""):
+            user_input = input('Please press enter')
+        os.system("clear")
 
 if __name__ == "__main__":
     main()
