@@ -50,7 +50,6 @@ def main():
                     break
             print(f"Found the best edge server: {HOST}:{best_port}")
             msg = send_message(message, best_port, True)
-            input()
             print(f"Load Balancer recieved: {msg}")
             send_message(msg, addr[1])
 
