@@ -23,6 +23,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             break
         # s.sendto(data.upper(), addr)
         if data.decode() in STORAGE:
+            print(f"Data found! Sending data to client: {STORAGE[data.decode()]}")
             s.sendto(STORAGE[data.decode()].encode(), addr)
         else:
             msg = "CannotFind"

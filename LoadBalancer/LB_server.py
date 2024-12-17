@@ -34,6 +34,8 @@ def main():
         while True:
             data, addr = s.recvfrom(1024)
             message = data.decode()
+            print(f"Message recieved from Client: {message}")
+            print("Looking for an edge server who either has the requested data in Cache or the least amount of load")
             if not data:
                 break
             least_load = 999
@@ -46,8 +48,9 @@ def main():
                 if cache == "yes":
                     best_port = port
                     break
-
+            print(f"Found the best edge server: {HOST}:{best_port}")
             msg = send_message(message, best_port, True)
+            input()
             print(f"Load Balancer recieved: {msg}")
             send_message(msg, addr[1])
 

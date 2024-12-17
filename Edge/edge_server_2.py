@@ -31,6 +31,7 @@ def main():
             if not data:
                 break
             recieved = data.decode().split(" ")
+            print()
             print(f"[{SERVER_NUM}] - recieved {recieved}")
             if (recieved[0] == "check_load"):
                 print(f'[{SERVER_NUM}] - pinged for load check')
